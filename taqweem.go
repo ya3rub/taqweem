@@ -117,6 +117,18 @@ func (tn HjriDate) Gregorian() time.Time {
 	return tn.t
 }
 
+func (t HjriDate) AddDate(years, months, days int) HjriDate {
+	tm := t.t.AddDate(years, months, days)
+	utm, _ := hijri.CreateUmmAlQuraDate(tm)
+	return HjriDate{
+		year:    uint(utm.Year),
+		month:   uint(utm.Month),
+		day:     uint(utm.Day),
+		weekday: utm.Weekday,
+		t:       tm,
+	}
+}
+
 func (tn HjriDate) String() string {
 	return fmt.Sprintf(
 		"%04d-%02d-%02d",
