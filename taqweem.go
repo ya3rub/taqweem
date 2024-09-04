@@ -188,12 +188,13 @@ func (h HjriDate) MonthStartingDay() HjriDate {
 		Weekday: h.weekday,
 	}
 
+	tm := wsg.ToGregorian().Add(-3 * time.Hour).In(h.t.Location())
 	return HjriDate{
 		year:    uint(wsg.Year),
 		month:   uint(wsg.Month),
 		day:     uint(wsg.Day),
-		weekday: wsg.Weekday,
-		t:       wsg.ToGregorian().Add(-3 * time.Hour).In(h.t.Location()),
+		weekday: tm.Weekday(),
+		t:       tm,
 	}
 }
 
@@ -238,7 +239,7 @@ func (h HjriDate) dayTime(inc int) HjriDate {
 		year:    uint(h.year),
 		month:   uint(h.month),
 		day:     uint(h.day),
-		weekday: h.weekday,
+		weekday: nd.Weekday(),
 		t:       nd,
 	}
 }
