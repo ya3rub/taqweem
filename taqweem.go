@@ -118,13 +118,18 @@ func (tn HjriDate) Gregorian() time.Time {
 }
 
 func (t HjriDate) AddDate(years, months, days int) HjriDate {
-	tm := t.t.AddDate(years, months, days)
-	utm, _ := hijri.CreateUmmAlQuraDate(tm)
+	utm := hijri.UmmAlQuraDate{
+		Day:   int64(t.day) + int64(days),
+		Month: int64(t.month) + int64(months),
+		Year:  int64(t.year) + int64(years),
+	}
+	newDate, _ := hijri.CreateUmmAlQuraDate(utm.ToGregorian())
+	tm := newDate.ToGregorian().Add(-3 * time.Hour).In(t.t.Location())
 	return HjriDate{
-		year:    uint(utm.Year),
-		month:   uint(utm.Month),
-		day:     uint(utm.Day),
-		weekday: utm.Weekday,
+		weekday: tm.Weekday(),
+		year:    uint(newDate.Year),
+		month:   uint(newDate.Month),
+		day:     uint(newDate.Day),
 		t:       tm,
 	}
 }
