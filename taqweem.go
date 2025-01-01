@@ -2,7 +2,6 @@ package taqweem
 
 import (
 	"fmt"
-	"log"
 	"time"
 	_ "time/tzdata"
 
@@ -147,7 +146,6 @@ func (tn HjriDate) Formatted() string {
 	p := message.NewPrinter(
 		language.Arabic,
 	)
-	log.Println(tn.month)
 	return p.Sprintf(
 		"%02d:%02d:%02d %d %s %d هـ",
 		tn.t.Hour(),
