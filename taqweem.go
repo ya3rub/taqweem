@@ -2,6 +2,7 @@ package taqweem
 
 import (
 	"fmt"
+	"log"
 	"time"
 	_ "time/tzdata"
 
@@ -88,13 +89,14 @@ type HjriDate struct {
 }
 
 func HijriOf(t time.Time) HjriDate {
+	log.Printf("%v got in hijri\n", t)
 	loc, _ := time.LoadLocation("Asia/Riyadh")
-	v, _ := hijri.CreateUmmAlQuraDate(t.UTC().Add(3 * time.Hour))
+	v, _ := hijri.CreateUmmAlQuraDate(t.Add(3 * time.Hour))
 	return HjriDate{
 		year:    uint(v.Year),
 		month:   uint(v.Month),
 		day:     uint(v.Day),
-		weekday: v.Weekday,
+		weekday: v.Weekday - 1,
 		t:       t.UTC().In(loc),
 	}
 }
@@ -107,7 +109,7 @@ func NowHijri() HjriDate {
 		year:    uint(v.Year),
 		month:   uint(v.Month),
 		day:     uint(v.Day),
-		weekday: v.Weekday,
+		weekday: v.Weekday - 1,
 		t:       t.In(loc),
 	}
 }
@@ -118,9 +120,10 @@ func (tn HjriDate) Gregorian() time.Time {
 
 func (t HjriDate) AddDate(years, months, days int) HjriDate {
 	utm := hijri.UmmAlQuraDate{
-		Day:   int64(t.day) + int64(days),
-		Month: int64(t.month) + int64(months),
-		Year:  int64(t.year) + int64(years),
+		Weekday: t.weekday,
+		Day:     int64(t.day) + int64(days),
+		Month:   int64(t.month) + int64(months),
+		Year:    int64(t.year) + int64(years),
 	}
 	newDate, _ := hijri.CreateUmmAlQuraDate(utm.ToGregorian())
 	tm := newDate.ToGregorian().Add(-3 * time.Hour).In(t.t.Location())
@@ -158,13 +161,17 @@ func (tn HjriDate) Formatted() string {
 }
 
 func (h HjriDate) WeekStartingDay() HjriDate {
+	log.Printf("%v got in week, weekday %v\n", h.t, h.t.Weekday())
 	weekStartG := h.t.AddDate(0, 0, -int(h.t.Weekday()))
-	wsg, _ := hijri.CreateUmmAlQuraDate(weekStartG)
+	log.Printf("%v weekStartG\n", weekStartG)
+	wsg, _ := hijri.CreateUmmAlQuraDate(weekStartG.Add(3 * time.Hour))
+
+	log.Printf("%v weekStartG wsg\n", wsg)
 	return HjriDate{
 		year:    uint(wsg.Year),
 		month:   uint(wsg.Month),
 		day:     uint(wsg.Day),
-		weekday: wsg.Weekday,
+		weekday: wsg.Weekday - 1,
 		t: time.Date(
 			weekStartG.Year(),
 			weekStartG.Month(),
