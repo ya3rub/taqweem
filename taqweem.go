@@ -2,7 +2,6 @@ package taqweem
 
 import (
 	"fmt"
-	"log"
 	"time"
 	_ "time/tzdata"
 
@@ -89,7 +88,6 @@ type HjriDate struct {
 }
 
 func HijriOf(t time.Time) HjriDate {
-	log.Printf("%v got in hijri\n", t)
 	loc, _ := time.LoadLocation("Asia/Riyadh")
 	v, _ := hijri.CreateUmmAlQuraDate(t.Add(3 * time.Hour))
 	return HjriDate{
@@ -161,12 +159,9 @@ func (tn HjriDate) Formatted() string {
 }
 
 func (h HjriDate) WeekStartingDay() HjriDate {
-	log.Printf("%v got in week, weekday %v\n", h.t, h.t.Weekday())
 	weekStartG := h.t.AddDate(0, 0, -int(h.t.Weekday()))
-	log.Printf("%v weekStartG\n", weekStartG)
 	wsg, _ := hijri.CreateUmmAlQuraDate(weekStartG.Add(3 * time.Hour))
 
-	log.Printf("%v weekStartG wsg\n", wsg)
 	return HjriDate{
 		year:    uint(wsg.Year),
 		month:   uint(wsg.Month),
