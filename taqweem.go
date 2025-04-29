@@ -210,6 +210,10 @@ func (t HjriDate) NextMonthStart() HjriDate {
 		year++
 	}
 
+	if nextMonth == 0 {
+		nextMonth = 12
+	}
+
 	nd := hijri.UmmAlQuraDate{
 		Day:   1,
 		Month: int64(nextMonth),
