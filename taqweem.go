@@ -238,12 +238,13 @@ func (t HjriDate) NextDayStart() HjriDate {
 func (h HjriDate) dayTime(inc int) HjriDate {
 	year, month, day := h.t.Date()
 	nd := time.Date(year, month, day+inc, 0, 0, 0, 0, h.t.Location())
+	hj, _ := hijri.CreateUmmAlQuraDate(nd.Add(3 * time.Hour))
 
 	return HjriDate{
-		year:    uint(h.year),
-		month:   uint(h.month),
-		day:     uint(h.day),
-		weekday: nd.Weekday(),
+		year:    uint(hj.Year),
+		month:   uint(hj.Month),
+		day:     uint(hj.Day),
+		weekday: hj.Weekday,
 		t:       nd,
 	}
 }
