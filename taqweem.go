@@ -145,10 +145,10 @@ func (tn HjriDate) String() string {
 
 func (tn HjriDate) Formatted() string {
 	p := message.NewPrinter(
-		language.Arabic,
+		language.MustParse("ar-u-nu-latn"),
 	)
 	return p.Sprintf(
-		"%02d:%02d:%02d %d %s %d هـ",
+		"%02d:%02d:%02d - %d %s %d هـ",
 		tn.t.Hour(),
 		tn.t.Minute(),
 		tn.t.Second(),
