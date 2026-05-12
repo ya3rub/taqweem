@@ -311,7 +311,7 @@ const (
 
 func fmtDurationInAR(value int, unit TimeUnit) string {
 	p := message.NewPrinter(
-		language.Arabic,
+		language.MustParse("ar-u-nu-latn"),
 	)
 
 	switch value {
